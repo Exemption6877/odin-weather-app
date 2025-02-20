@@ -131,3 +131,7 @@ form > input[type="submit"]:active {
   flex-direction: row;
   justify-content: space-between;
 }
+
+.loading {
+  font-size: 10rem;
+}

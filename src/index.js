@@ -5,6 +5,8 @@ const API_KEY = "V95FANYRGWCKFGZNYXGJFVZJE";
 
 const mainBlock = document.querySelector(".main-block");
 
+let loadingInterval;
+
 async function callAPI(city, callback) {
   try {
     const response = await fetch(
@@ -12,6 +14,12 @@ async function callAPI(city, callback) {
       { mode: `cors` }
     );
 
+    if (!response.ok) {
+      throw new Error(`City not found.`);
+    }
+    if (!weatherData || !weatherData.currentConditions) {
+      throw new Error(`City not found.`);
+    }
     const weatherData = await response.json();
     callback(weatherData);
     return weatherData;
@@ -84,6 +92,12 @@ const renderDOM = (function () {
 
 const render = (function () {
   const main = (data) => {
+    if (!data || !data.currentConditions) {
+      const errorLog = document.createElement("p");
+      errorLog.textContent = "City name is wrong.";
+      mainBlock.append(errorLog);
+      return;
+    }
     mainBlock.innerHTML = "";
     mainBlock.append(
       renderDOM.image(data.currentConditions),
@@ -93,6 +107,12 @@ const render = (function () {
     );
   };
   const secondary = (data, dayCount) => {
+    if (!data || !data.currentConditions) {
+      const errorLog = document.createElement("p");
+      errorLog.textContent = "City name is wrong.";
+      mainBlock.append(errorLog);
+      return;
+    }
     const sideBlock = document.querySelector(".side-block");
     sideBlock.innerHTML = "";
     for (let i = 1; i <= dayCount; i++) {
@@ -110,18 +130,45 @@ const render = (function () {
   return { main, secondary };
 })();
 
-async function initialize(cityCall) {
+async function initialize(cityCall, callback) {
   const data = await callAPI(cityCall, logWeather);
   render.main(data);
   render.secondary(data, 4);
+  callback();
 }
-
-initialize();
 
 const submit = document.querySelector("#submit");
 
 submit.addEventListener("click", (event) => {
   event.preventDefault();
+  loadingScreen();
   const search = document.querySelector("#search");
-  initialize(search.value);
+  initialize(search.value, stopInterval);
 });
+
+function loadingScreen() {
+  const loading = document.createElement("div");
+  const container = document.querySelector(".container");
+  loading.classList.add("loading");
+  let textOutput = "Loading";
+  let dotCount = 0;
+  loadingInterval = setInterval(() => {
+    if (dotCount < 3) {
+      dotCount++;
+      textOutput += ".";
+      loading.textContent = textOutput;
+    } else {
+      dotCount = 0;
+      textOutput = "Loading";
+      loading.textContent = textOutput;
+    }
+  }, 100);
+  container.prepend(loading);
+}
+
+// could've wrapped it to factory func
+function stopInterval() {
+  clearInterval(loadingInterval);
+  const loading = document.querySelector(".loading");
+  loading.remove();
+}
