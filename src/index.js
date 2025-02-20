@@ -53,25 +53,69 @@ const renderDOM = (function () {
   };
   const image = (responseJSON) => {
     const imageWeather = document.createElement("img");
-    imageWeather.src = conditionCheck(
-      responseJSON.currentConditions.conditions
-    );
+    imageWeather.src = conditionCheck(responseJSON.conditions);
     return imageWeather;
   };
 
   const conditions = (responseJSON) => {
-    const conditionBlock = document.querySelector(".conditions");
+    const conditionBlock = document.createElement("div");
+    conditionBlock.classList.add("conditions");
+
+    const conditionName = document.createElement("h3");
+    const temperature = document.createElement("h3");
+
+    conditionName.textContent = responseJSON.conditions;
+    temperature.textContent = `Temp: ${responseJSON.temp}`;
+
+    conditionBlock.append(conditionName, temperature);
+
+    return conditionBlock;
   };
-  return { header, image };
+
+  const description = (responseJSON) => {
+    const desc = document.createElement("p");
+    desc.classList.add("description");
+    desc.textContent = responseJSON.description;
+
+    return desc;
+  };
+  return { header, image, conditions, description };
 })();
 
-async function render(cityName) {
-  const data = await callAPI(cityName, logWeather);
+const render = (function () {
+  const main = (data) => {
+    mainBlock.append(
+      renderDOM.image(data.currentConditions),
+      renderDOM.header(data),
+      renderDOM.conditions(data.currentConditions),
+      renderDOM.description(data)
+    );
+  };
+  const secondary = (data, dayCount) => {
+    const sideBlock = document.querySelector(".side-block");
+    sideBlock.innerHTML = "";
+    for (let i = 1; i <= dayCount; i++) {
+      const entryBlock = document.createElement("div");
+      entryBlock.classList.add("secondary-entry");
 
-  mainBlock.append(renderDOM.header(data), renderDOM.image(data));
+      let image = renderDOM.image(data.days[i]);
+      let condition = renderDOM.conditions(data.days[i]);
+
+      entryBlock.append(image, condition);
+
+      sideBlock.append(entryBlock);
+    }
+  };
+  return { main, secondary };
+})();
+
+async function initialize() {
+  const data = await callAPI("Kyiv", logWeather);
+  render.main(data);
+  render.secondary(data, 4);
 }
 
-render("kyiv");
+initialize();
 
 const submit = document.querySelector("#submit");
 

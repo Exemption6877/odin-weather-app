@@ -42,6 +42,9 @@ body {
   background-color: #121746;
   flex: 1;
   border-radius: 0 2ch 2ch 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 img {
@@ -97,4 +100,29 @@ form > input[type="submit"]:hover {
 
 form > input[type="submit"]:active {
   background-color: #4a53b4;
+}
+
+.conditions {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.side-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.secondary-entry > img {
+  height: 3.5rem;
+}
+
+.secondary-entry {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1rem;
+  padding-left: 0.5rem;
 }
