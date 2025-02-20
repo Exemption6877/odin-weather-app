@@ -20,8 +20,8 @@ body {
 
 .output-container {
   display: flex;
-  height: 600px;
-  width: 650px;
+  height: auto;
+  width: auto;
 }
 
 .main-block {
@@ -123,6 +123,11 @@ form > input[type="submit"]:active {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 1rem;
-  padding-left: 0.5rem;
+  padding: 0.5rem;
+}
+
+.secondary-entry > .conditions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }

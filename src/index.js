@@ -65,7 +65,7 @@ const renderDOM = (function () {
     const temperature = document.createElement("h3");
 
     conditionName.textContent = responseJSON.conditions;
-    temperature.textContent = `Temp: ${responseJSON.temp}`;
+    temperature.textContent = `${responseJSON.temp} C`;
 
     conditionBlock.append(conditionName, temperature);
 
@@ -84,6 +84,7 @@ const renderDOM = (function () {
 
 const render = (function () {
   const main = (data) => {
+    mainBlock.innerHTML = "";
     mainBlock.append(
       renderDOM.image(data.currentConditions),
       renderDOM.header(data),
@@ -109,8 +110,8 @@ const render = (function () {
   return { main, secondary };
 })();
 
-async function initialize() {
-  const data = await callAPI("Kyiv", logWeather);
+async function initialize(cityCall) {
+  const data = await callAPI(cityCall, logWeather);
   render.main(data);
   render.secondary(data, 4);
 }
@@ -122,4 +123,5 @@ const submit = document.querySelector("#submit");
 submit.addEventListener("click", (event) => {
   event.preventDefault();
   const search = document.querySelector("#search");
+  initialize(search.value);
 });
