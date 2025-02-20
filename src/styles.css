@@ -35,13 +35,12 @@ body {
 }
 
 .main-block > h1 {
-  align-self: center;
+  text-align: center;
 }
 
 .side-block {
   background-color: #121746;
   flex: 1;
-
   border-radius: 0 2ch 2ch 0;
 }
 
