@@ -17,9 +17,7 @@ async function callAPI(city, callback) {
     if (!response.ok) {
       throw new Error(`City not found.`);
     }
-    if (!weatherData || !weatherData.currentConditions) {
-      throw new Error(`City not found.`);
-    }
+
     const weatherData = await response.json();
     callback(weatherData);
     return weatherData;
@@ -107,7 +105,7 @@ const render = (function () {
     );
   };
   const secondary = (data, dayCount) => {
-    if (!data || !data.currentConditions) {
+    if (!data) {
       const errorLog = document.createElement("p");
       errorLog.textContent = "City name is wrong.";
       mainBlock.append(errorLog);
