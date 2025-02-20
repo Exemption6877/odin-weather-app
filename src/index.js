@@ -17,8 +17,12 @@ async function callAPI(city, callback) {
   );
 
   const weatherData = await response.json();
-  console.log(weatherData);
+  callback(weatherData);
   return weatherData;
 }
 
-callAPI("London");
+function logWeather(data) {
+  return console.log(data);
+}
+
+callAPI("London", logWeather);
