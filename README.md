@@ -1,1 +1,1 @@
-# weather-app
+# odin-weather-app
